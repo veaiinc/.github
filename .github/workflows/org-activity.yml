@@ -1,143 +1,143 @@
-# .github/workflows/org-activity.yml
-name: Update org activity SVG
+# # .github/workflows/org-activity.yml
+# name: Update org activity SVG
 
-on:
-  schedule:
-    - cron: "17 2 * * *"
-  workflow_dispatch:
+# on:
+#   schedule:
+#     - cron: "17 2 * * *"
+#   workflow_dispatch:
 
-permissions:
-  contents: write
+# permissions:
+#   contents: write
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    env:
-      # Use a fine-grained PAT you created and saved as a repo secret
-      GITHUB_TOKEN: ${{ secrets.ORG_STATS_TOKEN }}
-      ORG: veaiinc            # set to your org login
-    steps:
-      - uses: actions/checkout@v4
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     env:
+#       # Use a fine-grained PAT you created and saved as a repo secret
+#       GITHUB_TOKEN: ${{ secrets.ORG_STATS_TOKEN }}
+#       ORG: veaiinc            # set to your org login
+#     steps:
+#       - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+#       - name: Setup Node
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: 20
 
-      - name: Generate SVG
-        run: |
-          mkdir -p assets scripts
-          cat > scripts/generate-org-activity.mjs <<'EOF'
-          import fs from "node:fs";
+#       - name: Generate SVG
+#         run: |
+#           mkdir -p assets scripts
+#           cat > scripts/generate-org-activity.mjs <<'EOF'
+#           import fs from "node:fs";
 
-          const org = process.env.ORG || "veaiinc";
-          const token = process.env.GITHUB_TOKEN;
-          if (!token) throw new Error("GITHUB_TOKEN missing. Use a PAT secret for private orgs.");
+#           const org = process.env.ORG || "veaiinc";
+#           const token = process.env.GITHUB_TOKEN;
+#           if (!token) throw new Error("GITHUB_TOKEN missing. Use a PAT secret for private orgs.");
 
-          const since = new Date();
-          since.setFullYear(since.getFullYear() - 1);
-          const sinceISO = since.toISOString();
+#           const since = new Date();
+#           since.setFullYear(since.getFullYear() - 1);
+#           const sinceISO = since.toISOString();
 
-          const query = `
-            query($org:String!, $since:DateTime!) {
-              organization(login:$org){
-                membersWithRole(first:100){
-                  nodes{
-                    login
-                    contributionsCollection(from:$since){
-                      totalCommitContributions
-                      totalPullRequestContributions
-                      totalIssueContributions
-                      totalPullRequestReviewContributions
-                    }
-                  }
-                }
-              }
-            }
-          `;
+#           const query = `
+#             query($org:String!, $since:DateTime!) {
+#               organization(login:$org){
+#                 membersWithRole(first:100){
+#                   nodes{
+#                     login
+#                     contributionsCollection(from:$since){
+#                       totalCommitContributions
+#                       totalPullRequestContributions
+#                       totalIssueContributions
+#                       totalPullRequestReviewContributions
+#                     }
+#                   }
+#                 }
+#               }
+#             }
+#           `;
 
-          async function gql(q, variables) {
-            const res = await fetch("https://api.github.com/graphql", {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-                "User-Agent": "veai-activity-bot"
-              },
-              body: JSON.stringify({ query: q, variables })
-            });
-            if (!res.ok) throw new Error(await res.text());
-            const json = await res.json();
-            if (json.errors) throw new Error(JSON.stringify(json.errors, null, 2));
-            return json.data;
-          }
+#           async function gql(q, variables) {
+#             const res = await fetch("https://api.github.com/graphql", {
+#               method: "POST",
+#               headers: {
+#                 Authorization: `Bearer ${token}`,
+#                 "Content-Type": "application/json",
+#                 "User-Agent": "veai-activity-bot"
+#               },
+#               body: JSON.stringify({ query: q, variables })
+#             });
+#             if (!res.ok) throw new Error(await res.text());
+#             const json = await res.json();
+#             if (json.errors) throw new Error(JSON.stringify(json.errors, null, 2));
+#             return json.data;
+#           }
 
-          const data = await gql(query, { org, since: sinceISO });
-          const members = data.organization?.membersWithRole?.nodes || [];
+#           const data = await gql(query, { org, since: sinceISO });
+#           const members = data.organization?.membersWithRole?.nodes || [];
 
-          const totals = members.map(m => {
-            const c = m.contributionsCollection || {};
-            return (
-              (c.totalCommitContributions || 0) +
-              (c.totalPullRequestContributions || 0) +
-              (c.totalIssueContributions || 0) +
-              (c.totalPullRequestReviewContributions || 0)
-            );
-          });
+#           const totals = members.map(m => {
+#             const c = m.contributionsCollection || {};
+#             return (
+#               (c.totalCommitContributions || 0) +
+#               (c.totalPullRequestContributions || 0) +
+#               (c.totalIssueContributions || 0) +
+#               (c.totalPullRequestReviewContributions || 0)
+#             );
+#           });
 
-          const total = totals.reduce((a, b) => a + b, 0);
-          const max = Math.max(1, ...totals);
-          const bars = totals.sort((a, b) => b - a).slice(0, 20).reverse();
+#           const total = totals.reduce((a, b) => a + b, 0);
+#           const max = Math.max(1, ...totals);
+#           const bars = totals.sort((a, b) => b - a).slice(0, 20).reverse();
 
-          const width = 1000, height = 220, pad = 32;
-          const barW = (width - pad * 2) / (bars.length || 1);
-          const scale = h => (h / max) * (height - pad * 2);
+#           const width = 1000, height = 220, pad = 32;
+#           const barW = (width - pad * 2) / (bars.length || 1);
+#           const scale = h => (h / max) * (height - pad * 2);
 
-          let rects = "";
-          bars.forEach((v, i) => {
-            const h = scale(v);
-            const x = pad + i * barW;
-            const y = height - pad - h;
-            rects += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(barW - 6).toFixed(1)}" height="${h.toFixed(1)}" rx="4" opacity="0.9"/>`;
-          });
+#           let rects = "";
+#           bars.forEach((v, i) => {
+#             const h = scale(v);
+#             const x = pad + i * barW;
+#             const y = height - pad - h;
+#             rects += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(barW - 6).toFixed(1)}" height="${h.toFixed(1)}" rx="4" opacity="0.9"/>`;
+#           });
 
-          const updated = new Date().toISOString().split("T")[0];
+#           const updated = new Date().toISOString().split("T")[0];
 
-          const svg = `<?xml version="1.0" encoding="UTF-8"?>
-          <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#7dd3fc"/>
-                <stop offset="100%" stop-color="#a78bfa"/>
-              </linearGradient>
-              <style>
-                text{ font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif; fill: #c9d1d9; }
-                .title{ font-size:20px; font-weight:600; }
-                .sub{ font-size:12px; opacity:.8; }
-                rect{ fill: url(#g); }
-                .box{ fill:#0d1117; stroke:#30363d; rx:12; }
-              </style>
-            </defs>
-            <rect class="box" x="0" y="0" width="${width}" height="${height}"/>
-            <text class="title" x="${pad}" y="${pad}">${org} org activity last 12 months</text>
-            <g>${rects}</g>
-            <text class="sub" x="${pad}" y="${height - 8}">Total public activity ${total.toLocaleString()} • Updated ${updated}</text>
-          </svg>`;
+#           const svg = `<?xml version="1.0" encoding="UTF-8"?>
+#           <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+#             <defs>
+#               <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+#                 <stop offset="0%" stop-color="#7dd3fc"/>
+#                 <stop offset="100%" stop-color="#a78bfa"/>
+#               </linearGradient>
+#               <style>
+#                 text{ font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif; fill: #c9d1d9; }
+#                 .title{ font-size:20px; font-weight:600; }
+#                 .sub{ font-size:12px; opacity:.8; }
+#                 rect{ fill: url(#g); }
+#                 .box{ fill:#0d1117; stroke:#30363d; rx:12; }
+#               </style>
+#             </defs>
+#             <rect class="box" x="0" y="0" width="${width}" height="${height}"/>
+#             <text class="title" x="${pad}" y="${pad}">${org} org activity last 12 months</text>
+#             <g>${rects}</g>
+#             <text class="sub" x="${pad}" y="${height - 8}">Total public activity ${total.toLocaleString()} • Updated ${updated}</text>
+#           </svg>`;
 
-          fs.writeFileSync("assets/veai-activity.svg", svg);
-          console.log("Wrote assets/veai-activity.svg");
-          EOF
+#           fs.writeFileSync("assets/veai-activity.svg", svg);
+#           console.log("Wrote assets/veai-activity.svg");
+#           EOF
 
-          node scripts/generate-org-activity.mjs
+#           node scripts/generate-org-activity.mjs
 
-      - name: Commit SVG
-        run: |
-          if [[ -n "$(git status --porcelain)" ]]; then
-            git config user.name "veai-bot"
-            git config user.email "bot@users.noreply.github.com"
-            git add assets/veai-activity.svg
-            git commit -m "chore update org activity svg"
-            git push
-          else
-            echo "No changes"
-          fi
+#       - name: Commit SVG
+#         run: |
+#           if [[ -n "$(git status --porcelain)" ]]; then
+#             git config user.name "veai-bot"
+#             git config user.email "bot@users.noreply.github.com"
+#             git add assets/veai-activity.svg
+#             git commit -m "chore update org activity svg"
+#             git push
+#           else
+#             echo "No changes"
+#           fi
