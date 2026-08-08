@@ -1,94 +1,87 @@
 <p align="center">
-  <img src="https://www.ve.ai/ve-black-circle-logo.png" width="116" alt="Ve" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://ve.ai/blue/logo-cream.png" />
+    <img src="https://ve.ai/blue/logo-indigo.png" width="104" alt="Ve" />
+  </picture>
 </p>
 
-<h1 align="center">Ve — The Intent Company</h1>
+<h1 align="center">Ve — The Browser for The AI Age</h1>
 
-<p align="center"><b>A frontier lab building the input layer for Intent AI.</b></p>
-<p align="center"><i>Intent as interface. Software that meets you halfway.</i></p>
+<p align="center">Where people and AI work through the web together.</p>
 
 <p align="center">
-  <a href="https://ve.ai">ve.ai</a> &nbsp;·&nbsp; <a href="mailto:tech@ve.ai">tech@ve.ai</a>
+  <a href="https://ve.ai">ve.ai</a> &nbsp;·&nbsp;
+  <a href="https://ve.ai/security">Security</a> &nbsp;·&nbsp;
+  <a href="https://ve.ai/careers">Careers</a> &nbsp;·&nbsp;
+  <a href="mailto:tech@ve.ai">tech@ve.ai</a>
 </p>
 
----
-
-## The interface is backwards
-
-Humans know what they want. Machines force us to translate that intent into
-software steps. Every day, people waste time on the same translation work:
-explaining context, searching files, switching apps, rewriting messages, copying
-between tools, finding buttons, filling forms, turning conversations into tasks.
-
-AI should change that. **Not** by giving us another box to type into. **Not** by
-making us prompt more. **Not** by asking us to explain ourselves again.
-
-**The next interface is intent.**
+<p align="center"><b>Early access opens August 15, 2026.</b> &nbsp;<a href="https://ve.ai">Join the waitlist</a></p>
 
 ---
 
-## Meet the Intent Pointer
+## The web became the world's software layer
 
-Ve's first product is the **Intent Pointer** — a pointer that predicts your next
-move, whether it's a message, an action, or a workflow.
+Nearly everything we use to work now lives behind a browser tab. Email, meetings, docs, dashboards, messages, decisions. The browser itself stayed passive. It opens pages, remembers history, and waits for us to connect everything.
 
-**Wiggle to activate.** Just wiggle your pointer. Once active, it understands
-what's on your screen, what you're working on, and what you're likely trying to do
-next — your goals, context, work, meetings, emails, messages, unfinished tasks,
-and repeated patterns.
+AI changes what the browser can become. Ve gives intelligence a persistent, secure place to understand the work, use the tools already open, and carry an outcome forward across websites, files, accounts and time. That intelligence lives inside the thing that already holds your work.
 
-| Gesture | What Ve does |
-|---|---|
-| **Wiggle** | Activates the pointer. |
-| **Select** | Select anything on screen → Ve suggests what to do next: reply, summarize, research, rewrite, find context, prepare a follow-up, or turn it into a task. |
-| **Tap inline** | While writing, tap inline → Ve predicts your next message, in your tone, using your context. |
-| **Speak** | Say messy intent → Ve turns it into a polished message or action. No perfect prompting — just say what you mean. |
-| **Approve** | Ve notices repeated patterns and suggests routines it can automate — with your approval. |
+## It remembers. It anticipates. It acts.
 
-It's **cruise control for the work you repeat every day.** You stay in control.
-Ve predicts, prepares, and asks for approval before moving forward.
+Ve holds why each tab is open, what was decided, and what you were trying to finish. Come back tomorrow and the work resumes rather than just the windows.
 
----
+The next useful tab, reply, action, command or agent appears inline, ready to accept, redirect or ignore.
 
-## The signal layer expands
+People and agents research, communicate, operate tools and finish real work on the web without rebuilding the context first.
 
-Today, the Intent Pointer works from the signals available on the screen and
-inside your workflow — cursor, selection, screen state, voice, action patterns.
-Tomorrow, the signal layer widens. As interfaces mature, machines will meet humans
-through richer signals — attention, movement, environment, and eventually brain
-and electrical signals, when they become practical.
+## Agents stop at the login screen. Ve gets them through it.
 
-The destination is clear:
+Most agents become useless the moment a task needs an account. Ve signs them in through autofill without ever exposing your credentials to the model.
 
-> **Computers should understand intent before humans are forced to translate it.**
+- **Secrets stay invisible to AI.** Credentials are filled into the website, never handed to the agent.
+- **Human approval at the edge.** Payments, posts and messages wait for your confirmation.
+- **A record of every access.** Every credential use is logged, so you know exactly what the agent touched.
 
-Ve is building toward the fullest expression of that idea.
+Encryption is hardware-backed and end to end, access is scoped and logged, and you can import the vault you already have.
 
----
+## Work that outlives the tab
 
-<p align="center"><i>Intent as interface.<br>Software that meets you halfway.<br>AI that understands what you mean and moves work forward.</i></p>
+Ve organises work in Missions rather than tabs. A Mission starts with an intent and a definition of success, and it carries the context, people, agents, tabs, terminals, decisions and evidence needed to move that intent forward. It continues in the background, pauses for approval, resumes days later, and survives a change of device, model or owner. Its state stays visible.
 
----
+## Completion is not success
 
-## Join Ve
+Most software stops once the work is produced. Code generated, message sent, ticket closed. But the work existed for a reason outside itself. A feature was built to change how people behave. A reply was sent to end someone's problem.
 
-Build personal software at Ve. Small team, real product, deeply held opinions
-about how this is supposed to feel.
+So a Mission says up front what should become true, and Ve goes back to check, comparing what happened against what was intended. Where the evidence is thin it says so instead of claiming a win. And the system that produced the work does not get to judge it.
 
-- **Edit, don't commission** — the best work gets shaped by people who can edit their own writing, code, and designs. Editing is the rarest leverage in software; we hire for it.
-- **Build the actual thing** — no spec-only roles. Engineers ship to production. Designers prototype in the codebase.
-- **Long arc, short loop** — building personal software for the next twenty years, and shipping something better every two weeks.
+When a result holds up, Ve keeps the conditions, the reasoning, the order, the approvals and the evidence that produced it. That record is a Proven Path, and the next person or agent starts from it instead of an empty box.
 
-→ **[ve.ai/careers](https://ve.ai/careers)** &nbsp;·&nbsp; <a href="mailto:careers@ve.ai">careers@ve.ai</a>
+## Why product companies first
+
+Product work forms a loop you can observe. A customer signal connects to a decision, an implementation, a release, a change in behaviour and a measurable result. The loop is imperfect and attribution is sometimes uncertain, but there is enough evidence to learn from reality rather than only from instructions.
+
+Yet the people building products still work in general-purpose browsers, terminals, email clients and project tools, often the same software their customers use. Nothing was designed around the complete life of a product.
+
+Humans decide. Agents do. The company moves as one.
+
+## Working here
+
+Small team, heads-down on the product. Three things we hold to:
+
+- **Edit, don't commission.** The best work here gets shaped by people who can edit their own writing, code and designs. Editing is the rarest leverage in software and we hire for it on purpose.
+- **Build the actual thing.** No spec-only roles. Engineers ship to production, designers prototype in the codebase, the brand person edits the product copy.
+- **Long arc, short loop.** Building the browser for the next twenty years while shipping something better every two weeks.
+
+If that's how you want to work, write to [careers@ve.ai](mailto:careers@ve.ai) and tell us what you'd build.
 
 ---
 
 <p align="center">
-  🌐 <a href="https://ve.ai">ve.ai</a> &nbsp;·&nbsp;
-  💼 <a href="https://www.linkedin.com/company/vetheintentcompany">LinkedIn</a> &nbsp;·&nbsp;
-  👤 Founder &amp; Chief Scientist <a href="https://github.com/vijayeesam">@vijayeesam</a> &nbsp;·&nbsp;
-  ✉️ tech@ve.ai &nbsp;·&nbsp;
-  📍 San Francisco · Bengaluru · Hyderabad
+  <a href="https://ve.ai">ve.ai</a> &nbsp;·&nbsp;
+  <a href="https://x.com/vebrowser">X</a> &nbsp;·&nbsp;
+  <a href="https://www.linkedin.com/company/ve-browser">LinkedIn</a> &nbsp;·&nbsp;
+  Founder &amp; Chief Scientist <a href="https://github.com/vijayeesam">@vijayeesam</a> &nbsp;·&nbsp;
+  <a href="mailto:tech@ve.ai">tech@ve.ai</a>
 </p>
 
-<p align="center"><sub>© Ve Inc. · Built for humans · Encrypted on device</sub></p>
+<p align="center"><sub>© VE Ai, Inc. 2026</sub></p>
