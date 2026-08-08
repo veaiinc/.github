@@ -5,7 +5,7 @@
   </picture>
 </p>
 
-<h1 align="center">Ve — The Browser for The AI Age</h1>
+<h1 align="center">Ve: The Browser for The AI Age</h1>
 
 <p align="center">Where people and AI work through the web together.</p>
 
