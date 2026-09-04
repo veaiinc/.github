@@ -56,6 +56,23 @@ while IFS= read -r repo; do
     echo "Created private target repository."
   fi
 
+  if [[ "${DISABLE_TARGET_ACTIONS}" == "true" ]]; then
+    gh api -X PUT "repos/${TARGET_ORG}/${repo}/actions/permissions" -F enabled=false >/dev/null || {
+      echo "Warning: could not disable Actions on ${TARGET_ORG}/${repo}." >&2
+    }
+  fi
+
+  protected_branches="$(
+    gh api "repos/${TARGET_ORG}/${repo}/branches?per_page=100" --paginate --jq '.[] | select(.protected) | .name' 2>/dev/null || true
+  )"
+  while IFS= read -r protected_branch; do
+    [[ -z "${protected_branch}" ]] && continue
+    encoded_branch="$(jq -rn --arg value "${protected_branch}" '$value | @uri')"
+    gh api -X DELETE "repos/${TARGET_ORG}/${repo}/branches/${encoded_branch}/protection" >/dev/null || {
+      echo "Warning: could not remove branch protection for ${TARGET_ORG}/${repo}:${protected_branch}." >&2
+    }
+  done <<< "${protected_branches}"
+
   repo_dir="${WORK_ROOT}/${repo}.git"
   if [[ -d "${repo_dir}" ]]; then
     echo "Removing stale local mirror ${repo_dir}."
@@ -80,12 +97,6 @@ while IFS= read -r repo; do
   if [[ -n "${default_branch}" ]]; then
     gh repo edit "${TARGET_ORG}/${repo}" --default-branch "${default_branch}" >/dev/null || {
       echo "Warning: could not set default branch ${default_branch} on ${TARGET_ORG}/${repo}." >&2
-    }
-  fi
-
-  if [[ "${DISABLE_TARGET_ACTIONS}" == "true" ]]; then
-    gh api -X PUT "repos/${TARGET_ORG}/${repo}/actions/permissions" -F enabled=false >/dev/null || {
-      echo "Warning: could not disable Actions on ${TARGET_ORG}/${repo}." >&2
     }
   fi
 
