@@ -1,0 +1,49 @@
+name: Sync Ve-Browser repos to veaiinc
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+    inputs:
+      repositories:
+        description: "Optional comma or newline separated repo names. Empty means all active Ve-Browser repos."
+        required: false
+        type: string
+      disable_target_actions:
+        description: "Disable GitHub Actions on veaiinc mirror repos so pipelines stay in Ve-Browser."
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ve-browser-to-veaiinc-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Mirror repositories
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    env:
+      GH_TOKEN: ${{ secrets.VE_BROWSER_TO_VEAIINC_SYNC_TOKEN }}
+      SOURCE_ORG: Ve-Browser
+      TARGET_ORG: veaiinc
+      SYNC_REPOSITORIES: ${{ inputs.repositories }}
+      DISABLE_TARGET_ACTIONS: ${{ inputs.disable_target_actions || 'true' }}
+    steps:
+      - name: Checkout sync workflow repo
+        uses: actions/checkout@v4
+
+      - name: Verify token
+        run: |
+          if [[ -z "${GH_TOKEN}" ]]; then
+            echo "Missing VE_BROWSER_TO_VEAIINC_SYNC_TOKEN." >&2
+            exit 1
+          fi
+          gh auth status -h github.com
+
+      - name: Sync Ve-Browser repos into veaiinc mirrors
+        run: bash .github/scripts/sync-ve-browser-to-veaiinc.sh
