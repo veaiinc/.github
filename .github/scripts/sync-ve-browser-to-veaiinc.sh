@@ -15,6 +15,8 @@ fi
 mkdir -p "${WORK_ROOT}"
 repos_file="${WORK_ROOT}/repositories.txt"
 
+gh auth setup-git --hostname github.com >/dev/null
+
 if [[ -n "${SYNC_REPOSITORIES:-}" ]]; then
   printf '%s\n' "${SYNC_REPOSITORIES}" \
     | tr ',' '\n' \
@@ -61,21 +63,16 @@ while IFS= read -r repo; do
     rm -rf "${repo_dir}"
   fi
 
-  git -c "http.extraheader=Authorization: Bearer ${GH_TOKEN}" \
-    clone --bare "https://github.com/${SOURCE_ORG}/${repo}.git" "${repo_dir}" >/dev/null
+  git clone --bare "https://github.com/${SOURCE_ORG}/${repo}.git" "${repo_dir}" >/dev/null
 
   if git -C "${repo_dir}" show-ref --heads --quiet; then
-    git -C "${repo_dir}" \
-      -c "http.extraheader=Authorization: Bearer ${GH_TOKEN}" \
-      push "https://github.com/${TARGET_ORG}/${repo}.git" '+refs/heads/*:refs/heads/*'
+    git -C "${repo_dir}" push "https://github.com/${TARGET_ORG}/${repo}.git" '+refs/heads/*:refs/heads/*'
   else
     echo "Source has no branches."
   fi
 
   if git -C "${repo_dir}" show-ref --tags --quiet; then
-    git -C "${repo_dir}" \
-      -c "http.extraheader=Authorization: Bearer ${GH_TOKEN}" \
-      push "https://github.com/${TARGET_ORG}/${repo}.git" '+refs/tags/*:refs/tags/*'
+    git -C "${repo_dir}" push "https://github.com/${TARGET_ORG}/${repo}.git" '+refs/tags/*:refs/tags/*'
   else
     echo "Source has no tags."
   fi
